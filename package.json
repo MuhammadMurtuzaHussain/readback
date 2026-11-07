@@ -1,0 +1,61 @@
+{
+  "name": "readback-cli",
+  "version": "0.1.0",
+  "description": "Point it at a project you built with AI. It reads the code, draws what it actually does, and tests whether you can explain it. Runs on your machine.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Muhammad Murtuza Hussain (https://muhammadmurtuza.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MuhammadMurtuzaHussain/readback.git"
+  },
+  "bin": {
+    "readback": "dist/cli.js"
+  },
+  "files": [
+    "dist/cli.js",
+    "dist/viewer",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:viewer && npm run build:site && npm run build:cli",
+    "build:viewer": "vite build --mode viewer",
+    "build:site": "vite build --mode site",
+    "build:cli": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "demo": "tsx scripts/build-demos.ts",
+    "shots": "node scripts/shots.mjs",
+    "inspect": "tsx scripts/inspect.ts"
+  },
+  "dependencies": {
+    "@babel/parser": "^8.1.0",
+    "ignore": "^7.0.14",
+    "tree-sitter-python": "^0.25.0",
+    "web-tree-sitter": "^0.27.2"
+  },
+  "devDependencies": {
+    "@fontsource-variable/atkinson-hyperlegible-mono": "^5.3.0",
+    "@fontsource-variable/atkinson-hyperlegible-next": "^5.3.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "motion": "^14.10.1",
+    "playwright-core": "^1.65.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tsup": "^9.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.6",
+    "vite-plugin-singlefile": "^2.3.4",
+    "vitest": "^5.1.0"
+  }
+}

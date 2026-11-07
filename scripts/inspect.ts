@@ -1,0 +1,23 @@
+import { scanFolder } from '../src/cli/scan';
+import { analyse } from '../src/engine';
+import { nodePython } from '../src/cli/python';
+const dir = process.argv[2];
+const t = Date.now();
+const scan = await scanFolder(dir);
+const parsePython = (await nodePython()) ?? undefined;
+if (!parsePython) console.log('NO PYTHON');
+const r = analyse(scan.files, { allPaths: scan.allPaths, tracked: scan.tracked, parsePython });
+const short = process.argv[3] === 'full';
+console.log(`# ${r.project.name} (${r.project.shape}) files=${r.coverage.files} parsed=${r.coverage.analysed} ms=${Date.now()-t}`);
+console.log('summary:', r.summary.map(s => s.parts.map(p => typeof p === 'string' ? p : p.text).join('')).join(' '));
+console.log('screens', r.screens.length, r.screens.slice(0, 8).map(s => `${s.path}[${s.render}]`).join(' '));
+console.log('routes', r.routes.length, r.routes.slice(0, short?999:12).map(x => `${x.method} ${x.path} auth=${x.auth.status} w=${x.writes?1:0} svc=${x.services.join('+')}`).join('\n  '));
+console.log('services', r.services.map(s => `${s.id}(${s.operations.length} ops, ${s.from.join('/')}, r${s.routes.length} s${s.screens.length})`).join(' '));
+console.log('journeys', r.journeys.length);
+for (const j of r.journeys.slice(0, short?30:6)) { console.log(` * ${j.title} [${j.score}]`); for (const s of j.steps) console.log(`     ${s.kind}: ${s.title}`); console.log(`     fail: ${j.failure.text}`); }
+console.log('risks'); for (const x of r.risks) console.log(` ${x.severity} ${x.rule}: ${x.title}`);
+console.log('tables', r.tables.map(t => `${t.name}(${t.fields.length})`).join(' '));
+console.log('env', r.env.map(e => `${e.name}:${e.exposure}`).join(' '));
+console.log('stack', r.stack.slice(0, 14).map(t => `${t.name}${t.ghost?'(ghost)':''}:${t.importedBy}`).join(' '));
+console.log('questions', r.questions.length, r.questions.map(q => q.topic).join(','));
+console.log('gaps', r.gaps.length, r.gaps.slice(0, 6).map(g => g.text).join(' | '));
