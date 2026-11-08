@@ -1,6 +1,6 @@
 {
   "name": "readback-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Point it at a project you built with AI. It reads the code, draws what it actually does, and tests whether you can explain it. Runs on your machine.",
   "type": "module",
   "license": "MIT",
