@@ -1,10 +1,11 @@
-import { Moon, Sun, X } from '@phosphor-icons/react';
+import { Moon, Play, Sun, X } from '@phosphor-icons/react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import type { Report, ViewId } from '../engine/types';
 import { CodeBlock } from './Code';
 import { ReportCtx, save, store } from './ctx';
 import type { Opened } from './ctx';
+import { Film } from './play/Film';
 import { Journeys } from './views/Journeys';
 import { MapView } from './views/MapView';
 import { Overview } from './views/Overview';
@@ -33,6 +34,8 @@ const VIEWS: Array<{ id: ViewId; label: string }> = [
   { id: 'readback', label: 'Read it back' },
 ];
 
+const wantsFilm = (): boolean => location.hash === '#play';
+
 function hashView(): ViewId {
   const h = location.hash.replace('#', '') as ViewId;
   return VIEWS.some((v) => v.id === h) ? h : 'overview';
@@ -42,11 +45,15 @@ export function Viewer({ report, onHome }: { report: Report; onHome?: () => void
   const [view, setView] = useState<ViewId>(hashView);
   const [focus, setFocus] = useState<string | undefined>();
   const [opened, setOpened] = useState<Opened | null>(null);
+  const [film, setFilm] = useState(wantsFilm);
   const [theme, toggle] = useTheme();
   const reduce = useReducedMotion();
 
   useEffect(() => {
-    const on = (): void => setView(hashView());
+    const on = (): void => {
+      setFilm(wantsFilm());
+      setView(hashView());
+    };
     window.addEventListener('hashchange', on);
     return () => window.removeEventListener('hashchange', on);
   }, []);
@@ -70,6 +77,10 @@ export function Viewer({ report, onHome }: { report: Report; onHome?: () => void
       window.scrollTo({ top: 0 });
     },
     show: setOpened,
+    play: () => {
+      location.hash = 'play';
+      setFilm(true);
+    },
   }), [report, view, focus]);
 
   const counts: Partial<Record<ViewId, { n: number; hot?: boolean }>> = {
@@ -95,6 +106,7 @@ export function Viewer({ report, onHome }: { report: Report; onHome?: () => void
               );
             })}
           </nav>
+          <button className="play-btn" onClick={ctx.play} aria-label="Play the film of this project"><Play size={15} weight="fill" /><span>Play</span></button>
           <button className="icon-btn" aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} onClick={toggle}>
             {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
           </button>
@@ -108,6 +120,13 @@ export function Viewer({ report, onHome }: { report: Report; onHome?: () => void
           {view === 'risks' && <Risks />}
           {view === 'readback' && <Readback />}
         </main>
+        {film && (
+          <Film
+            report={report}
+            onClose={() => { setFilm(false); location.hash = view; }}
+            onExplore={(v) => { setFilm(false); ctx.go(v); }}
+          />
+        )}
         <AnimatePresence>
           {opened && (
             <motion.aside

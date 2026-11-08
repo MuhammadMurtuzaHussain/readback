@@ -1,4 +1,4 @@
-import { ArrowRight } from '@phosphor-icons/react';
+import { ArrowRight, Play } from '@phosphor-icons/react';
 import { useState } from 'react';
 import type { Sentence, Target } from '../../engine/types';
 import { plural, useR } from '../ctx';
@@ -23,7 +23,7 @@ function Line({ s }: { s: Sentence }) {
 }
 
 export function Overview() {
-  const { report: r, go, show } = useR();
+  const { report: r, go, show, play } = useR();
   const [allGaps, setAllGaps] = useState(false);
   const gaps = allGaps ? r.gaps : r.gaps.slice(0, 8);
   const first = r.journeys[0];
@@ -37,11 +37,14 @@ export function Overview() {
             <span><i>Underlined</i> means I found it in the code. Click to see where.</span>
           </div>
           <Narrate />
-          {first && (
-            <button className="next" onClick={() => go('journeys', first.id)}>
-              Follow one thing through the app <ArrowRight size={18} />
-            </button>
-          )}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 32px', alignItems: 'center', marginTop: 48 }}>
+            <button className="btn primary" onClick={play}><Play size={17} weight="fill" /> Watch it as a film</button>
+            {first && (
+              <button className="next" style={{ marginTop: 0 }} onClick={() => go('journeys', first.id)}>
+                Follow one thing through the app <ArrowRight size={18} />
+              </button>
+            )}
+          </div>
         </div>
         <aside className="side">
           {(r.project.readmeLine || r.project.description) && (

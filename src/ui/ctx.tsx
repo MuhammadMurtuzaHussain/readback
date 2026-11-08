@@ -13,6 +13,7 @@ export interface Ctx {
   go: (v: ViewId, id?: string) => void;
   focus?: string;
   show: (o: Opened) => void;
+  play: () => void;
 }
 
 export const ReportCtx = createContext<Ctx>(null as unknown as Ctx);

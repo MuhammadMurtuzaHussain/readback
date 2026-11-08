@@ -21,10 +21,19 @@ npx https://github.com/MuhammadMurtuzaHussain/readback/releases/latest/download/
 This opens a report on `127.0.0.1`. Other options:
 
 ```bash
+readback ./my-app --play              # open straight into the film
 readback ./my-app --out report.html   # one shareable file, with code snippets inside it
 readback ./my-app --json report.json  # the raw facts, for other tools
 readback github.com/owner/repo        # shallow clone, analyse, delete
 ```
+
+## Press play
+
+Press **Play** and Readback tells your project as a 90 second film: what it is, its screens and doors, what it stands on, what breaks when one service goes down, one click followed step by step to the database, the risks, and a question to answer. It uses the same facts as the rest of the report, so it says nothing the report does not.
+
+Space pauses, the arrow keys move between scenes, and the timeline jumps anywhere. The speaker button reads it aloud using only voices installed on your device, so nothing is sent anywhere. It opens straight from a link ending in `#play`.
+
+![The film following a click from the browser to the server, with the code beside it](public/shots/film-journey-light.png)
 
 ## What you get
 

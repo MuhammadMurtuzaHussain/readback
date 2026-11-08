@@ -121,6 +121,17 @@ export function Site() {
         </picture>
       </section>
 
+      <section className="lsec feature flip">
+        <div>
+          <h3>Press play and watch your own app explained</h3>
+          <p>A 90 second film of your project, built from the same facts: what it is, what it stands on, one click followed to the database, and what could bite you. It can read itself aloud with a voice that runs on your own computer.</p>
+        </div>
+        <picture>
+          <source srcSet="./shots/film-journey-dark.png" media="(prefers-color-scheme: dark)" />
+          <img className="shot" src="./shots/film-journey-light.png" alt="The film playing one step of a journey: a path moving from the browser lane to the server lane, beside the code that runs." loading="lazy" width="1440" height="900" />
+        </picture>
+      </section>
+
       <section className="lsec feature">
         <div>
           <h3>Follow one click from the button to the database</h3>
@@ -129,7 +140,7 @@ export function Site() {
         <img className="shot" src="./shots/journeys-light.png" alt="A journey stepping from a button click through the browser and server to the database, with the code for the current step beside it." loading="lazy" width="1440" height="900" />
       </section>
 
-      <section className="lsec feature flip">
+      <section className="lsec feature flip" style={{ borderTop: 0 }}>
         <div>
           <h3>Turn a service off and watch what breaks</h3>
           <p>Click Supabase or OpenAI on the map. The screens and routes that depend on it light up, so you know what your app is really standing on.</p>

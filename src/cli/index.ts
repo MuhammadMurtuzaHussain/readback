@@ -15,6 +15,7 @@ const HELP = `readback: see what your project actually does.
 
   --out <file.html>   write one shareable HTML file instead of opening a browser
   --json <file>       write the raw report as JSON
+  --play              open straight into the film of your project
   --no-open           serve the report but do not open a browser
   --port <n>          port for the local page (default: any free port)
   -h, --help          show this
@@ -99,7 +100,7 @@ async function main(): Promise<void> {
     });
     server.listen(Number(arg('--port') ?? 0), '127.0.0.1', () => {
       const addr = server.address();
-      const url = `http://127.0.0.1:${typeof addr === 'object' && addr ? addr.port : ''}`;
+      const url = `http://127.0.0.1:${typeof addr === 'object' && addr ? addr.port : ''}/${process.argv.includes('--play') ? '#play' : ''}`;
       process.stderr.write(`Your report is at ${url}\nPress Ctrl+C to stop. Only this computer can see it.\n`);
       if (!process.argv.includes('--no-open')) openBrowser(url);
     });

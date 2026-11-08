@@ -38,7 +38,7 @@ const tab = async (page, name) => {
   await page.waitForTimeout(500);
 };
 const snap = async (page, name) => {
-  if (name.endsWith('-dark') && !name.startsWith('journeys')) return;
+  if (name.endsWith('-dark') && !name.startsWith('journeys') && !name.startsWith('film-journey')) return;
   await page.screenshot({ path: `public/shots/${name}.png` });
 };
 
@@ -73,6 +73,27 @@ for (const scheme of ['light', 'dark']) {
   await snap(page, `risks-${scheme}`);
   await tab(page, 'Read it back');
   await snap(page, `readback-${scheme}`);
+  // The film: one journey step and the outage, settled and paused.
+  await page.getByRole('button', { name: 'Play the film of this project' }).click();
+  await page.waitForSelector('.film');
+  for (const [label, name] of [['What breaks', 'film-outage'], ['Someone clicks', 'film-journey']]) {
+    const segs = page.locator('.f-seg');
+    const n = await segs.count();
+    let target = 0;
+    for (let i = 0; i < n; i++) if ((await segs.nth(i).getAttribute('aria-label')).includes(label)) { target = i; if (label === 'What breaks') break; if (i > 0 && (await segs.nth(i - 1).getAttribute('aria-label')).includes(label)) { target = i; } }
+    if (name === 'film-journey') {
+      const firsts = [];
+      for (let i = 0; i < n; i++) if ((await segs.nth(i).getAttribute('aria-label')).includes(label)) firsts.push(i);
+      target = firsts[Math.min(3, firsts.length - 1)];
+    }
+    await segs.nth(target).click();
+    await page.waitForTimeout(2300);
+    await page.keyboard.press('Space');
+    await page.evaluate(() => document.activeElement?.blur());
+    await snap(page, `${name}-${scheme}`);
+    await page.keyboard.press('Space');
+  }
+  await page.keyboard.press('Escape');
   await ctx.close();
 }
 
